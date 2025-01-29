@@ -37,15 +37,17 @@ jobs:
         shell: pwsh
         run: |
           gh run list -w "dev_calling"
-          $output = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,displayTitle,event,headBranch,headSha,name,url,status
-          $output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
+          $output   = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,displayTitle,event,headBranch,headSha,name,url,status
+          $final_op = $output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
 
           write-output "github.sha:"
           write-output "${{ github.sha }}"
 
           Write-output "workflow SHAs:  "
-          $output | select-object name,headSha
-          $output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.sha }}" }
+          $final_op | select-object name,headSha
+          
+          write-output "Here's the matching ones..."
+          $final_op | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.sha }}" }
 
   # qa... 
   # if dev PR succeeded (and SHA matches)
