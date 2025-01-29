@@ -55,8 +55,6 @@ jobs:
   #           exit 1
   #         }
 
-  
-  ### anything...?
 
   call-workflow:
     # if: ( contains(needs.check-qa-deployment.result, 'success') || contains(needs.check-qa-deployment.result, 'skipped'))
