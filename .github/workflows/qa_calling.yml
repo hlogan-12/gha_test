@@ -24,7 +24,7 @@ env:
   check_workflow_name: dev_calling
 
 jobs:
-  check-dev-success:
+  check-dev-deployment:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
@@ -36,17 +36,16 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
-          gh run list -w "dev_calling"
           $json_output  = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,name,displayTitle,event,headSha,status,conclusion
           $final_output = $json_output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
           $matching_sha = $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
           
-          Write-Output "Pull request SHA:  "
+          Write-Output "Pull request Head SHA:  "
           write-output "${{ github.event.pull_request.head.sha }}"
 
           if ( $matching_sha.conclusion -eq "success" ) {
             write-output "Found successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  $($matching_sha.headSha)"
-            exit 0
+            exit 1
           }
           else {
             write-output "Could not find successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  ${{ github.event.pull_request.head.sha }}"
@@ -55,9 +54,22 @@ jobs:
           }
 
   call-reusable-aworkflow:
-    if: contains(github.head_ref, 'test') && ( contains(needs.check-dev-success.result, 'success') || contains(needs.check-dev-success.result, 'skipped'))
-    needs: check-dev-success
-    uses: ./.github/workflows/reusable.yml
-    with:
-      environment: qa
-      message: this is the QA deployment
+    if: contains(github.head_ref, 'test') && ( contains(needs.check-dev-deployment.result, 'success') || contains(needs.check-dev-deployment.result, 'skipped'))
+    needs: check-dev-deployment
+    runs-on: ubuntu-latest
+    steps:      
+      - name: What the deal
+        shell: pwsh
+        run: |
+          write-output "result:  "
+          write-output "${{ needs.check-dev-deployment.result }}"
+
+
+
+      # call-reusable-aworkflow:
+  #   if: contains(github.head_ref, 'test') && ( contains(needs.check-dev-deployment.result, 'success') || contains(needs.check-dev-deployment.result, 'skipped'))
+  #   needs: check-dev-deployment
+  #   uses: ./.github/workflows/reusable.yml
+  #   with:
+  #     environment: qa
+  #     message: this is the QA deployment
