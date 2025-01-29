@@ -1,0 +1,22 @@
+name: Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      message:
+        required: true
+        type: string
+
+
+jobs:
+  jabroni_1:
+    environment: ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: display_message
+        shell: pwsh
+        run: |
+          Write-output "The ${{ inputs.message }} is in ${{ inputs.environment }}"
