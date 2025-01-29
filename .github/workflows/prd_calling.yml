@@ -1,4 +1,5 @@
-name: prd - calling
+name: prd_calling
+run-name: prd_calling
 
 on:
   workflow_dispatch:

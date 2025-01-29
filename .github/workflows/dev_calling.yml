@@ -1,4 +1,5 @@
-name: dev - calling
+name: dev_calling
+run-name: dev_calling
 
 on:
   workflow_dispatch:
