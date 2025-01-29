@@ -46,11 +46,6 @@ jobs:
   #           $final_output | ft
   #           exit 1
   #         }
-  pause-initial:
-    runs-on: ubuntu-latest
-    name: wait-job
-    steps:
-
 
   wait:
     if: ${{ github.event_name == 'pull_request' }}
@@ -68,7 +63,7 @@ jobs:
           timeout_mins: 15
           poll_interval_ms: 5000
 
-  call-reusable-workflow:
+  call-workflow:
     uses: ./.github/workflows/reusable.yml
     needs: wait
     with:
