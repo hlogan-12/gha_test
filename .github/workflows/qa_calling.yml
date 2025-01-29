@@ -19,6 +19,7 @@ on:
 permissions:
   contents: read
   actions: read
+  pull-requests: write
 
 
 env:
@@ -57,7 +58,7 @@ jobs:
     steps:
       - name: Sleep
         shell: bash
-        run: sleep 20s
+        run: sleep 10s
 
       - name: WAIT
         uses: codex-/await-local-workflow-run@v1
@@ -65,7 +66,7 @@ jobs:
           token: ${{ github.token }} # The standard action GitHub token should be enough to poll the local workflows.
           workflow: ${{ env.WAIT_WORKFLOW_FLOW }}
           timeout_mins: 15
-          poll_interval_ms: 5000
+          poll_interval_ms: 3000
 
 
   call-workflow:
