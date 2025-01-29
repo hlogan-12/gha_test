@@ -4,6 +4,16 @@ run-name: prd_calling
 on:
   workflow_dispatch:
 
+  # pull_request:
+  #   types:
+  #     - closed
+  #   branches:
+  #     - 'main'
+  #   paths:
+  #     - source/*
+  #     - .github/workflows/reusable.yml
+  #     - .github/workflows/*_calling.yml
+
 permissions:
   contents: read
   actions: read
@@ -13,7 +23,7 @@ env:
 
 jobs:
   check-qa-deployment:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -24,24 +34,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
-          $json_output  = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,name,displayTitle,event,headSha,status,conclusion `
-                            | ConvertFrom-Json `
-                            | Sort-object -Property CreatedAt -Descending
-          
-          Write-Output "Current SHA:  ${{ github.event.pull_request.head.sha }}"
-
-          Write-Output "qa_calling results:  "
-          $final_output | Select-Object name,createdAt,event,headSha
-
-          # Get last QA run...
-          # If QA run SHA match PRD SHA, but it failed...
-          # if this 
-          ### Need to figure out logic...
-          #### if calling event == 'schedule' (workflow_dispatch to test)
-          ### Get last qa_calling run... 
-          ### Get last prd_calling run...
-          ### if the branch SHA each references isn't the same
-              ### ensure the qa_calling succeeded on its last pull_request
+          gh 
 
   
   call-reusable-workflow:

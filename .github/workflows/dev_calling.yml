@@ -14,7 +14,7 @@ on:
 
 
 jobs:
-  call-reusable-workflow:
+  call-workflow:
     uses: ./.github/workflows/reusable.yml
     with:
       environment: dev
@@ -22,6 +22,6 @@ jobs:
 
   # ensure pull requests run in dev and qa before merge and run in prod...
   deploy-qa:
-    if: ${{ github.event_name == 'pull_request' }} && contains(needs.call-reusable-workflow.result, 'success')
-    needs: call-reusable-workflow
+    if: ${{ github.event_name == 'pull_request' }} && contains(needs.call-workflow.result, 'success')
+    needs: call-workflow
     uses: ./.github/workflows/qa_calling.yml
