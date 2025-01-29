@@ -2,21 +2,27 @@ name: qa_calling
 run-name: qa_calling
 
 on:
-  # schedule:  # - '0 0,4,8,12,16,20 * * '
+  # schedule:
+  #   - cron: "0 0,4,8,12,16,20 * * *"
   
   workflow_dispatch: # call on-demand
 
-  workflow_call: # called from dev during pull request
+  pull_request:
+    branches:
+      - 'staging'
+    paths:
+      - source/*
+      - .github/workflows/reusable.yml
+      - .github/workflows/*_calling.yml
 
-  # pull_request: types:- closed branches: - 'main' paths:  - source/* - .github/workflows/reusable.yml - .github/workflows/*_calling.yml
+
+permissions:
+  contents: read
+  actions: read
 
 
-# permissions:
-#   contents: read
-#   actions: read
-
-# env:
-#   check_workflow_name: dev_calling
+env:
+  WAIT_WORKFLOW_FLOW: dev_calling.yml
 
 jobs:
   # check-dev-deployment:    ### IF WE'RE GOING TO DO THIS, NEED TO HAVE A 'WAIT FOR DEV' STEP FIRST
@@ -43,8 +49,52 @@ jobs:
   #           exit 1
   #         }
 
-  call-reusable-workflow:
+  # Give dev workflow a chance to start
+  # Wait for dev workflow to complete
+  wait:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sleep
+        shell: bash
+        run: sleep 20s
+
+      - name: WAIT
+        uses: codex-/await-local-workflow-run@v1
+        with:
+          token: ${{ github.token }} # The standard action GitHub token should be enough to poll the local workflows.
+          workflow: ${{ env.WAIT_WORKFLOW_FLOW }}
+          timeout_mins: 15
+          poll_interval_ms: 5000
+
+
+  call-workflow:
     uses: ./.github/workflows/reusable.yml
+    needs: wait
     with:
       environment: qa
       message: this is the QA deployment
+
+
+  # Get dependent jobs...
+  ### Get dev deployment run...
+  ### get QA deployment run...
+  ### add info to PR...
+  create-main-pr:
+    needs: [wait, call-workflow]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          gh pr create --base main --head staging --title "Staged Changes for Prod Merge" --body "Auto-deploying updates:
+            head_ref:  ${{ github.head_ref }}
+            actor:     ${{ github.actor }}"
+            ## Get most recent two 
+          

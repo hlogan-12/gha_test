@@ -2,26 +2,40 @@ name: dev_calling
 run-name: dev_calling
 
 on:
+  # schedule:
+  #   - cron: "0 0,4,8,12,16,20 * * *"
+
   workflow_dispatch:
 
   pull_request:
     branches:
-      - 'main'
+      - 'staging'
     paths:
       - source/**
       - .github/workflows/reusable.yml
       - .github/workflows/*_calling.yml
 
 
-jobs:
+jobs:           
   call-workflow:
     uses: ./.github/workflows/reusable.yml
     with:
       environment: dev
       message: this is the dev deployment
 
-  # ensure pull requests run in dev and qa before merge and run in prod...
-  # deploy-qa:
-  #   if: ${{ github.event_name == 'pull_request' }} && contains(needs.call-workflow.result, 'success')
+  # failure-issue:
+  #   if: failure()
   #   needs: call-workflow
-  #   uses: ./.github/workflows/qa_calling.yml
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v4
+
+  #     - name: Check Status
+  #       env:
+  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       shell: pwsh
+  #       run: |
+  #         gh issue create --title "${{ github.workflow }} - Failure" --body 'Failure details:
+  #         workflow:  ${{ github.workflow }}
+  #         event:     ${{ github.event_name }}'
