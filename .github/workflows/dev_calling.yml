@@ -16,7 +16,7 @@ on:
       - .github/workflows/*_calling.yml
 
 
-jobs:           
+jobs:
   call-workflow:
     uses: ./.github/workflows/reusable.yml
     with:
