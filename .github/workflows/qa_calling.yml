@@ -31,15 +31,16 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
-          $output = gh run list --workflow "dev - calling" --json name,workflowName,event,headBranch,headSha,status,conclusion
-          $output | ConvertFrom-Json | Sort -Property CreatedAt -Descending
+          gh run list -w "dev_calling"
+          $output = gh run list -w "dev_calling" --json name,workflowName,event,headBranch,headSha,status,conclusion
+          $output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
 
           write-output "github.sha:"
           write-output "${{ github.sha }}"
 
           Write-output "workflow SHAs:  "
-          $output | select name,headSha
-          $output | where { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.sha }}" }
+          $output | select-object name,headSha
+          $output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.sha }}" }
 
   # qa... 
   # if dev PR succeeded (and SHA matches)
