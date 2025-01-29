@@ -26,6 +26,9 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
       - name: Check Status
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
