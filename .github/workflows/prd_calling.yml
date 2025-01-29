@@ -24,6 +24,14 @@ permissions:
 #   check_workflow_name: qa_calling
 
 jobs: 
+
+  # Get previous prod workflow SHA
+    # if ^ !match THIS workflow SHA
+      # Confirm dev/qa workflows with matching SHA succeeded
+    # else
+      # who cares
+
+
   call-reusable-workflow:
     # if: ( contains(needs.check-qa-deployment.result, 'success') || contains(needs.check-qa-deployment.result, 'skipped'))
     # needs: check-qa-deployment

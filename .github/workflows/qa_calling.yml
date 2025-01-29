@@ -19,8 +19,10 @@ permissions:
   contents: read
   actions: read
 
+
 env:
   WAIT_WORKFLOW_FLOW: dev_calling.yml
+
 
 jobs:
   # check-dev-deployment:    ### IF WE'RE GOING TO DO THIS, NEED TO HAVE A 'WAIT FOR DEV' STEP FIRST
@@ -47,13 +49,15 @@ jobs:
   #           exit 1
   #         }
 
+  # Give dev workflow a chance to start (wait 20 seconds)
+  # Wait for dev workflow to complete
   wait:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Sleep
-        run: sleep 10s
+      - name: Sleep 20 seconds
         shell: bash
+        run: sleep 20s
 
       - name: WAIT
         uses: codex-/await-local-workflow-run@v1
