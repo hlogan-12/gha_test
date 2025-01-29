@@ -13,7 +13,7 @@ on:
     branches:
       - 'main'
     paths:
-      - source/*
+      - source/**
       - .github/workflows/reusable.yml
       - .github/workflows/*_calling.yml
 
