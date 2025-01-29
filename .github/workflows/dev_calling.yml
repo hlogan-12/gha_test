@@ -13,18 +13,9 @@ on:
       - .github/workflows/*_calling.yml
 
 
-jobs:
-  fail-dawg:    ### IF WE'RE GOING TO DO THIS, NEED TO HAVE A 'WAIT FOR DEV' STEP FIRST
-    if: ${{ github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check Status
-        shell: pwsh
-        run: |
-          exit 1
-            
-  # call-workflow:
-  #   uses: ./.github/workflows/reusable.yml
-  #   with:
-  #     environment: dev
-  #     message: this is the dev deployment
+jobs:           
+  call-workflow:
+    uses: ./.github/workflows/reusable.yml
+    with:
+      environment: dev
+      message: this is the dev deployment
