@@ -75,27 +75,4 @@ jobs:
     with:
       environment: qa
       message: this is the QA deployment
-
-
-  # Get dependent jobs...
-  ### Get dev deployment run...
-  ### get QA deployment run...
-  ### add info to PR...
-  create-main-pr:
-    needs: [wait, call-workflow]
-    if: success()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Create PR
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: pwsh
-        run: |
-          gh pr create --base main --head staging --title "Staged Changes for Prod Merge" --body "Auto-deploying updates:
-            head_ref:  ${{ github.head_ref }}
-            actor:     ${{ github.actor }}"
-            ## Get most recent two 
           
