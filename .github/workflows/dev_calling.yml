@@ -21,7 +21,7 @@ jobs:
       message: this is the dev deployment
 
   # ensure pull requests run in dev and qa before merge and run in prod...
-  deploy-qa:
-    if: ${{ github.event_name == 'pull_request' }} && contains(needs.call-workflow.result, 'success')
-    needs: call-workflow
-    uses: ./.github/workflows/qa_calling.yml
+  # deploy-qa:
+  #   if: ${{ github.event_name == 'pull_request' }} && contains(needs.call-workflow.result, 'success')
+  #   needs: call-workflow
+  #   uses: ./.github/workflows/qa_calling.yml

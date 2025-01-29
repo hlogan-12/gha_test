@@ -2,20 +2,13 @@ name: qa_calling
 run-name: qa_calling
 
 on:
-  # schedule:
-  workflow_dispatch:
+  # schedule:  # - '0 0,4,8,12,16,20 * * '
+  
+  workflow_dispatch: # call on-demand
 
-  workflow_call:
+  workflow_call: # called from dev during pull request
 
-  # pull_request:
-  #   types:
-  #     - closed
-  #   branches:
-  #     - 'main'
-  #   paths:
-  #     - source/*
-  #     - .github/workflows/reusable.yml
-  #     - .github/workflows/*_calling.yml
+  # pull_request: types:- closed branches: - 'main' paths:  - source/* - .github/workflows/reusable.yml - .github/workflows/*_calling.yml
 
 
 # permissions:
@@ -26,22 +19,17 @@ on:
 #   check_workflow_name: dev_calling
 
 jobs:
-  # check-dev-deployment:
+  # check-dev-deployment:    ### IF WE'RE GOING TO DO THIS, NEED TO HAVE A 'WAIT FOR DEV' STEP FIRST
   #   if: ${{ github.event_name == 'pull_request' }}
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v4
-      
+  #     - name: Checkout repo   uses: actions/checkout@v4
   #     - name: Check Status
-  #       env:
-  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       shell: pwsh
-  #       run: |
+  #       env:  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       shell: pwsh  run: |
   #         $json_output  = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,name,displayTitle,event,headSha,status,conclusion
   #         $final_output = $json_output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
   #         $matching_sha = $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
-          
   #         Write-Output "Pull request Head SHA:  "
   #         write-output "${{ github.event.pull_request.head.sha }}"
 
