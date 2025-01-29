@@ -1,0 +1,22 @@
+name: sgdev - calling
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+    branches:
+      - 'main_protect_test'
+    paths:
+      - source/*
+      - .github/workflows/reusable.yml
+      - .github/workflows/*_calling.yml
+
+
+jobs:
+  call-reusable-aworkflow:
+    if: contains(github.head_ref, 'test')
+    uses: ./.github/workflows/reusable.yml
+    with:
+      environment: sgdev
+      message: silly-goose
