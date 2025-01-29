@@ -13,7 +13,7 @@ env:
 
 jobs:
   check-qa-deployment:
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -26,7 +26,7 @@ jobs:
         run: |
           $json_output  = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,name,displayTitle,event,headSha,status,conclusion
           $final_output = $json_output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
-          $matching_sha = $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
+          $matching_sha = $final_output | where-object { $_.event -eq 'workflow_dispatch' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
           
           Write-Output "Pull request Head SHA:  "
           write-output "${{ github.event.pull_request.head.sha }}"
@@ -42,7 +42,7 @@ jobs:
           }
 
   call-reusable-workflow:
-    if: contains(github.head_ref, 'test') && ( contains(needs.check-dev-deployment.result, 'success') || contains(needs.check-dev-deployment.result, 'skipped'))
+    if: ( contains(needs.check-qa-deployment.result, 'success') || contains(needs.check-qa-deployment.result, 'skipped'))
     needs: check-qa-deployment
     uses: ./.github/workflows/reusable.yml
     with:
