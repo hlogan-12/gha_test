@@ -24,7 +24,7 @@ jobs:
       message: this is the dev deployment
 
   failure-issue:
-    if: ${{ needs.call-workflow.result != 'success' }}
+    if: ${{ needs.call-workflow.result == 'failure' }}
     needs: call-workflow
     runs-on: ubuntu-latest
     steps:
