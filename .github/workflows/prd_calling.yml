@@ -7,15 +7,15 @@ on:
 
   workflow_dispatch:
 
-  # pull_request:
-  #   types:
-  #     - closed
-  #   branches:
-  #     - 'main'
-  #   paths:
-  #     - source/*
-  #     - .github/workflows/reusable.yml
-  #     - .github/workflows/*_calling.yml
+  pull_request: # run when a PR is merged/closed...?
+    types:
+      - closed
+    branches:
+      - 'main'
+    paths:
+      - source/*
+      - .github/workflows/reusable.yml
+      - .github/workflows/*_calling.yml
 
 permissions:
   contents: read
@@ -55,9 +55,10 @@ jobs:
   #           exit 1
   #         }
 
+  
+  ### anything...?
 
-
-  call-reusable-workflow:
+  call-workflow:
     # if: ( contains(needs.check-qa-deployment.result, 'success') || contains(needs.check-qa-deployment.result, 'skipped'))
     # needs: check-qa-deployment
     uses: ./.github/workflows/reusable.yml

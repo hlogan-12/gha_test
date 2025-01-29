@@ -9,7 +9,7 @@ on:
 
   pull_request:
     branches:
-      - 'main'
+      - 'staging'
     paths:
       - source/*
       - .github/workflows/reusable.yml
@@ -23,7 +23,6 @@ permissions:
 
 env:
   WAIT_WORKFLOW_FLOW: dev_calling.yml
-
 
 jobs:
   # check-dev-deployment:    ### IF WE'RE GOING TO DO THIS, NEED TO HAVE A 'WAIT FOR DEV' STEP FIRST
@@ -68,9 +67,34 @@ jobs:
           timeout_mins: 15
           poll_interval_ms: 5000
 
+
   call-workflow:
     uses: ./.github/workflows/reusable.yml
     needs: wait
     with:
       environment: qa
       message: this is the QA deployment
+
+
+  # Get dependent jobs...
+  ### Get dev deployment run...
+  ### get QA deployment run...
+  ### add info to PR...
+  create-main-pr:
+    needs: [wait, call-workflow]
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          gh pr create --base main --head staging --title "Staged Changes for Prod Merge" --body "Auto-deploying updates:
+            head_ref:  ${{ github.head_ref }}
+            actor:     ${{ github.actor }}"
+            ## Get most recent two 
+          
