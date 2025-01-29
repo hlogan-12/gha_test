@@ -39,25 +39,24 @@ jobs:
           gh run list -w "dev_calling"
           $json_output  = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,displayTitle,event,headBranch,headSha,name,url,status
           $final_output = $json_output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
+          $matching_sha = $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
 
-          write-output "github.sha:"
-          write-output "${{ github.sha }}"
-
-          write-output "github.event.pull_request.head.sha"
-          write-output "${{ github.event.pull_request.head.sha }}"
-
-          Write-output "workflow SHAs:  "
-          $final_output | select-object createdAt,name,headBranch,headSha
-          
-          write-output "Here's the matching ones..."
-          $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
+          if ( $matching_sha.conclusion -eq "success" ) {
+            write-output "Heck yeah dude... success"
+            exit 0
+          }
+          else {
+            write-output "oh no dude... failure"
+            exit 1
+          }
 
   # qa... 
   # if dev PR succeeded (and SHA matches)
   # # need use GitHub Token...
 
   call-reusable-aworkflow:
-    if: contains(github.head_ref, 'test')
+    if: contains(github.head_ref, 'test') && ( ${{ success () }} || contains(needs.check-dev-success.result, 'skipped'))
+    needs: check-dev-success
     uses: ./.github/workflows/reusable.yml
     with:
       environment: qa
