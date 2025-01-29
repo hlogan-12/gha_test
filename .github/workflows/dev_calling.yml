@@ -1,0 +1,33 @@
+name: dev - calling
+
+on:
+  workflow_dispatch:
+
+  pull_request:
+    types:
+      - opened
+      - edited
+    branches:
+      - 'main'
+    paths:
+      - source/*
+      - .github/workflows/reusable.yml
+      - .github/workflows/*_calling.yml
+
+
+jobs:
+  check-trigger:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Trigger
+        shell: pwsh
+        run: |
+          write-output "this mf was run via a 'workflow_dispatch'"
+
+  call-reusable-aworkflow:
+    if: contains(github.head_ref, 'test')
+    uses: ./.github/workflows/reusable.yml
+    with:
+      environment: dev
+      message: this is the dev deployment

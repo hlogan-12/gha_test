@@ -1,0 +1,52 @@
+name: qa - calling
+
+on:
+  # schedule:
+  workflow_dispatch:
+
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'main'
+    paths:
+      - source/*
+      - .github/workflows/reusable.yml
+      - .github/workflows/*_calling.yml
+
+
+permissions:
+  contents: read
+  actions: read
+
+
+jobs:
+  check-dev-status:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Status
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $output = gh run list --workflow "dev - calling" --json name,workflowName,event,headBranch,headSha,status,conclusion
+          $output | ConvertFrom-Json | Sort -Property CreatedAt -Descending
+
+          write-output "github.sha:"
+          write-output "${{ github.sha }}"
+
+          Write-output "workflow SHAs:  "
+          $output | select name,headSha
+          $output | where { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.sha }}" }
+
+  # qa... 
+  # if dev PR succeeded (and SHA matches)
+  # # need use GitHub Token...
+
+  call-reusable-aworkflow:
+    if: contains(github.head_ref, 'test')
+    uses: ./.github/workflows/reusable.yml
+    with:
+      environment: qa
+      message: this is the QA deployment
