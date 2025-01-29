@@ -12,11 +12,12 @@ on:
 
 
 jobs:
-  reusable-job-1:
+  output:
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     steps:
-      - name: display_message
+      - name: display message
         shell: pwsh
         run: |
           Write-output "The ${{ inputs.message }} is in ${{ inputs.environment }}"
+          # exit 1
