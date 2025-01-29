@@ -41,29 +41,21 @@ jobs:
           $final_output = $json_output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
           $matching_sha = $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
           
-          $matching_sha | ft
-
-          write-output "github.event.pull_request.head.sha"
+          Write-Output "Pull request SHA:  "
           write-output "${{ github.event.pull_request.head.sha }}"
-          
-          Write-output "workflow SHAs:  "
-          $final_output | select-object createdAt,name,headBranch,headSha
 
           if ( $matching_sha.conclusion -eq "success" ) {
-            write-output "Heck yeah dude... success"
+            write-output "Found successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  $($matching_sha.headSha)"
             exit 0
           }
           else {
-            write-output "oh no dude... failure"
+            write-output "Could not find successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  ${{ github.event.pull_request.head.sha }}"
+            $final_output | ft
             exit 1
           }
 
-  # qa... 
-  # if dev PR succeeded (and SHA matches)
-  # # need use GitHub Token...
-
   call-reusable-aworkflow:
-    if: contains(github.head_ref, 'test') && ( ${{ success () }} || contains(needs.check-dev-success.result, 'skipped'))
+    if: contains(github.head_ref, 'test') && ( contains(needs.check-dev-success.result, 'success') || contains(needs.check-dev-success.result, 'skipped'))
     needs: check-dev-success
     uses: ./.github/workflows/reusable.yml
     with:
