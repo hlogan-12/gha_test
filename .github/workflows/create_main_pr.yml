@@ -33,6 +33,7 @@ jobs:
         with:
           signoff: false
           branch: staging
+          base: main
           title: 'Auto - staging to main'
           body: |
             Update report
