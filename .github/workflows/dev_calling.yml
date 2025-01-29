@@ -4,7 +4,7 @@ run-name: dev_calling
 on:
   # schedule:
   #   - cron: "0 0,4,8,12,16,20 * * *"
-  
+
   workflow_dispatch:
 
   pull_request:
@@ -22,3 +22,21 @@ jobs:
     with:
       environment: dev
       message: this is the dev deployment
+
+  failure-issue:
+    if: ! contains(needs.call-workflow.result, 'success')
+    needs: call-workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Check Status
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          gh issue create --title "${{ github.workflow }} - Failure" --body 'Failure details:
+          workflow:  ${{ github.workflow }}
+          event:     ${{ github.event_name }}
+          '

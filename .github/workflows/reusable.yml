@@ -20,3 +20,4 @@ jobs:
         shell: pwsh
         run: |
           Write-output "The ${{ inputs.message }} is in ${{ inputs.environment }}"
+          exit 1
