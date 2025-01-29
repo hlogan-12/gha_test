@@ -12,7 +12,7 @@ on:
 
 
 jobs:
-  jabroni_1:
+  reusable-job-1:
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     steps:

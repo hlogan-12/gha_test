@@ -1,4 +1,5 @@
-name: qa - calling
+name: qa_calling
+run-name: qa_calling
 
 on:
   # schedule:

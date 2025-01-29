@@ -1,12 +1,10 @@
-name: dev - calling
+name: dev_calling
+run-name: dev_calling
 
 on:
   workflow_dispatch:
 
   pull_request:
-    types:
-      - opened
-      - edited
     branches:
       - 'main'
     paths:
