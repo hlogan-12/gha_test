@@ -45,7 +45,7 @@ jobs:
 
           if ( $matching_sha.conclusion -eq "success" ) {
             write-output "Found successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  $($matching_sha.headSha)"
-            exit 1
+            exit 0
           }
           else {
             write-output "Could not find successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  ${{ github.event.pull_request.head.sha }}"
@@ -53,23 +53,11 @@ jobs:
             exit 1
           }
 
-  call-reusable-aworkflow:
+
+  call-reusable-workflow:
     if: contains(github.head_ref, 'test') && ( contains(needs.check-dev-deployment.result, 'success') || contains(needs.check-dev-deployment.result, 'skipped'))
     needs: check-dev-deployment
-    runs-on: ubuntu-latest
-    steps:      
-      - name: What the deal
-        shell: pwsh
-        run: |
-          write-output "result:  "
-          write-output "${{ needs.check-dev-deployment.result }}"
-
-
-
-      # call-reusable-aworkflow:
-  #   if: contains(github.head_ref, 'test') && ( contains(needs.check-dev-deployment.result, 'success') || contains(needs.check-dev-deployment.result, 'skipped'))
-  #   needs: check-dev-deployment
-  #   uses: ./.github/workflows/reusable.yml
-  #   with:
-  #     environment: qa
-  #     message: this is the QA deployment
+    uses: ./.github/workflows/reusable.yml
+    with:
+      environment: qa
+      message: this is the QA deployment
