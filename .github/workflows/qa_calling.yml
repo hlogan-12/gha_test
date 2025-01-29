@@ -43,11 +43,14 @@ jobs:
           write-output "github.sha:"
           write-output "${{ github.sha }}"
 
+          write-output "github.event.pull_request.head.sha"
+          write-output "${{ github.event.pull_request.head.sha }}"
+
           Write-output "workflow SHAs:  "
-          $final_output | select-object name,headSha
+          $final_output | select-object createdAt,name,headBranch,headSha
           
           write-output "Here's the matching ones..."
-          $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.sha }}" }
+          $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
 
   # qa... 
   # if dev PR succeeded (and SHA matches)
