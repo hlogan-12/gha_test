@@ -26,15 +26,13 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          signoff: false
-          branch: staging
-          base: main
-          title: 'Auto - staging to main'
-          body: |
-            Update report
-            - Updated with *today's* date
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          write-output "Creating pull request: "
+          gh pr create --base main --head staging --title "Testing auto-env deployments" --body "Yes"
