@@ -6,7 +6,14 @@ on:
   
   workflow_dispatch: # call on-demand
 
-  workflow_call: # called from dev during pull request
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - source/*
+      - .github/workflows/reusable.yml
+      - .github/workflows/*_calling.yml
+
 
 permissions:
   contents: read
