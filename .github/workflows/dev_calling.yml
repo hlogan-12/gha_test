@@ -2,6 +2,9 @@ name: dev_calling
 run-name: dev_calling
 
 on:
+  # schedule:
+  #   - cron: "0 0,4,8,12,16,20 * * *"
+  
   workflow_dispatch:
 
   pull_request:

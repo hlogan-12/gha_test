@@ -2,7 +2,8 @@ name: prd_calling
 run-name: prd_calling
 
 on:
-  # schedule...
+  # schedule:
+  #   - cron: "0 0,4,8,12,16,20 * * *"
 
   workflow_dispatch:
 
@@ -24,12 +25,36 @@ permissions:
 #   check_workflow_name: qa_calling
 
 jobs: 
+  # check-prior-deployment:    ### IF WE'RE GOING TO DO THIS, NEED TO HAVE A 'WAIT FOR DEV' STEP FIRST
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v4
+  #     - name: Check Status
+  #       env:  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       shell: pwsh  run: |
+            # Get previous prod workflow SHA
+              # if ^ !match THIS workflow SHA
+                # Confirm dev/qa workflows with matching SHA succeeded
+              # else
+                # who cares
 
-  # Get previous prod workflow SHA
-    # if ^ !match THIS workflow SHA
-      # Confirm dev/qa workflows with matching SHA succeeded
-    # else
-      # who cares
+  #         $json_output  = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,name,displayTitle,event,headSha,status,conclusion
+  #         $final_output = $json_output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
+  #         $matching_sha = $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
+  #         Write-Output "Pull request Head SHA:  "
+  #         write-output "${{ github.event.pull_request.head.sha }}"
+
+  #         if ( $matching_sha.conclusion -eq "success" ) {
+  #           write-output "Found successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  $($matching_sha.headSha)"
+  #           exit 0
+  #         }
+  #         else {
+  #           write-output "Could not find successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  ${{ github.event.pull_request.head.sha }}"
+  #           $final_output | ft
+  #           exit 1
+  #         }
+
 
 
   call-reusable-workflow:

@@ -2,7 +2,8 @@ name: qa_calling
 run-name: qa_calling
 
 on:
-  # schedule:  # - '0 0,4,8,12,16,20 * * '
+  # schedule:
+  #   - cron: "0 0,4,8,12,16,20 * * *"
   
   workflow_dispatch: # call on-demand
 
@@ -49,13 +50,13 @@ jobs:
   #           exit 1
   #         }
 
-  # Give dev workflow a chance to start (wait 20 seconds)
+  # Give dev workflow a chance to start
   # Wait for dev workflow to complete
   wait:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Sleep 20 seconds
+      - name: Sleep
         shell: bash
         run: sleep 20s
 

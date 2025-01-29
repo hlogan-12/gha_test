@@ -19,6 +19,4 @@ jobs:
       - name: display message
         shell: pwsh
         run: |
-          exit 1
-          # Write-output "The ${{ inputs.message }} is in ${{ inputs.environment }}"
-
+          Write-output "The ${{ inputs.message }} is in ${{ inputs.environment }}"
