@@ -24,6 +24,18 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
+          $json_output  = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,name,displayTitle,event,headSha,status,conclusion `
+                            | ConvertFrom-Json `
+                            | Sort-object -Property CreatedAt -Descending
+          
+          Write-Output "Current SHA:  ${{ github.event.pull_request.head.sha }}"
+
+          Write-Output "qa_calling results:  "
+          $final_output | Select-Object name,createdAt,event,headSha
+
+          # Get last QA run...
+          # If QA run SHA match PRD SHA, but it failed...
+          # if this 
           ### Need to figure out logic...
           #### if calling event == 'schedule' (workflow_dispatch to test)
           ### Get last qa_calling run... 
