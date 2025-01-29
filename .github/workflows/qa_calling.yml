@@ -20,9 +20,11 @@ permissions:
   contents: read
   actions: read
 
+env:
+  check_workflow_name: dev_calling
 
 jobs:
-  check-dev-status:
+  check-dev-success:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +37,7 @@ jobs:
         shell: pwsh
         run: |
           gh run list -w "dev_calling"
-          $output = gh run list -w "dev_calling" --json name,workflowName,event,headBranch,headSha,status,conclusion
+          $output = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,displayTitle,event,headBranch,headSha,name,url,status
           $output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
 
           write-output "github.sha:"
