@@ -23,7 +23,7 @@ permissions:
 
 
 env:
-  WAIT_WORKFLOW_FLOW: dev_calling.yml
+  WAIT_WORKFLOW_NAME: dev_calling.yml
 
 jobs:
   # check-dev-deployment:    ### IF WE'RE GOING TO DO THIS, NEED TO HAVE A 'WAIT FOR DEV' STEP FIRST
@@ -64,7 +64,7 @@ jobs:
         uses: codex-/await-local-workflow-run@v1
         with:
           token: ${{ github.token }} # The standard action GitHub token should be enough to poll the local workflows.
-          workflow: ${{ env.WAIT_WORKFLOW_FLOW }}
+          workflow: ${{ env.WAIT_WORKFLOW_NAME }}
           timeout_mins: 15
           poll_interval_ms: 3000
 
