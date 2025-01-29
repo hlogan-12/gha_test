@@ -46,19 +46,27 @@ jobs:
   #           $final_output | ft
   #           exit 1
   #         }
+  pause-initial:
+    runs-on: ubuntu-latest
+    name: wait-job
+    steps:
+
 
   wait:
-    if: ${{ github.event_name == 'workflow_call' }}
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Await the completion of FancyDispatch
+      - name: Sleep
+        run: sleep 10s
+        shell: bash
+
+      - name: WAIT
         uses: codex-/await-local-workflow-run@v1
         with:
           token: ${{ github.token }} # The standard action GitHub token should be enough to poll the local workflows.
           workflow: ${{ env.WAIT_WORKFLOW_FLOW }}
           timeout_mins: 15
           poll_interval_ms: 5000
-
 
   call-reusable-workflow:
     uses: ./.github/workflows/reusable.yml
