@@ -1,6 +1,6 @@
-name: prd calling
+name: prd_calling
 
-run-name: ${{ vars.ENV_NAME}}_calling
+run-name: prd_calling
 
 on:
   # schedule:

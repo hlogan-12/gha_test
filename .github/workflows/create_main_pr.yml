@@ -38,9 +38,9 @@ jobs:
           gh pr create --base main --head '${{ github.head_ref  }}' --title "${{ github.head_ref }} - auto PR" --body "Pull Request Details:
             event_name:   ${{ github.event_name }}
             event_path:   ${{ github.event_path }}
-            head branch:  ${{ github.head_ref }} 
-            actor:        ${{ github.actor }}          ## head branch title, etc...
-            workflow_ref: ${{ github.workflow_ref	 }}  ## staging PR title...
-            workflow_sha: ${{ github.workflow_sha	 }}
+            head branch:  ${{ github.head_ref }}
+            actor:        ${{ github.actor }}
+            workflow_ref: ${{ github.workflow_ref }}
+            workflow_sha: ${{ github.workflow_sha }}
             ref_name:     ${{ github.ref_name }}
             path:         ${{ github.path }}"

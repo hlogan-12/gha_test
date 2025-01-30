@@ -1,6 +1,6 @@
-name: qa calling
+name: qa_calling
 
-run-name: ${{ vars.ENV_NAME}}_calling
+run-name: qa_calling
 
 on:
   # schedule:
@@ -74,6 +74,6 @@ jobs:
     uses: ./.github/workflows/reusable.yml
     needs: wait
     with:
-      environment: ${{ vars.ENV_NAME}}
-      message: this is the ${{ vars.ENV_NAME}} deployment
+      environment: ${{ vars.ENV_NAME }}
+      message: this is the ${{ vars.ENV_NAME }} deployment
           
