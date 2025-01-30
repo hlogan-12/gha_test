@@ -20,7 +20,7 @@ on:
 permissions:
   contents: read
   actions: read
-  pull-requests: write
+  # pull-requests: write
 
 
 env:
@@ -75,5 +75,5 @@ jobs:
     needs: wait
     with:
       environment: ${{ vars.ENV_NAME}}
-      message: this is the QA deployment
+      message: this is the ${{ vars.ENV_NAME}} deployment
           
