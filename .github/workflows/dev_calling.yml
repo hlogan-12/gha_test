@@ -21,8 +21,8 @@ jobs:
   call-workflow:
     uses: ./.github/workflows/reusable.yml
     with:
-      environment: ${{ vars.ENV_NAME }}
-      message: this is the ${{ vars.ENV_NAME }} deployment
+      environment: dev
+      message: this is the dev deployment
 
   # failure-issue:
   #   if: failure()
