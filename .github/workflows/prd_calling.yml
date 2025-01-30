@@ -1,5 +1,6 @@
-name: prd_calling
-run-name: prd_calling
+name: prd calling
+
+run-name: ${{ vars.ENV_NAME}}_calling
 
 on:
   # schedule:
@@ -61,5 +62,5 @@ jobs:
     # needs: check-qa-deployment
     uses: ./.github/workflows/reusable.yml
     with:
-      environment: prd
-      message: this is the PRD deployment
+      environment: ${{ vars.ENV_NAME}}
+      message: 'this is the ${{ vars.ENV_NAME}} deployment'

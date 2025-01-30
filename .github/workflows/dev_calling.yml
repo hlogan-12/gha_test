@@ -1,5 +1,6 @@
-name: dev_calling
-run-name: dev_calling
+name: dev calling
+
+run-name: ${{ vars.ENV_NAME}}_calling
 
 on:
   # schedule:
@@ -20,8 +21,8 @@ jobs:
   call-workflow:
     uses: ./.github/workflows/reusable.yml
     with:
-      environment: dev
-      message: this is the dev deployment
+      environment: ${{ vars.ENV_NAME}}
+      message: this is the ${{ vars.ENV_NAME}} deployment
 
   # failure-issue:
   #   if: failure()
