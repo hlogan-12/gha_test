@@ -36,11 +36,13 @@ jobs:
         run: |
           write-output "Creating pull request: "
           gh pr create --base main --head '${{ github.head_ref  }}' --title "${{ github.head_ref }} - auto PR" --body "Pull Request Details:
-            event_name:   ${{ github.event_name }}
-            event_path:   ${{ github.event_path }}
-            head branch:  ${{ github.head_ref }}
-            actor:        ${{ github.actor }}
-            workflow_ref: ${{ github.workflow_ref }}
+
+            event_name: ${{ github.event_name }}
+            head_ref:  ${{ github.head_ref }}
+            sha: ${{ github.sha }}
+            actor: ${{ github.actor }}
             workflow_sha: ${{ github.workflow_sha }}
-            ref_name:     ${{ github.ref_name }}
-            path:         ${{ github.path }}"
+            ref_name: ${{ github.ref_name }}
+            path: ${{ github.path }}"
+
+### ADD RELEVANT TARGET ENVIRONMENT...
