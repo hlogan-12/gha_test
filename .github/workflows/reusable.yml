@@ -19,5 +19,8 @@ jobs:
       - name: display message
         shell: pwsh
         run: |
+          
           Write-output "The ${{ inputs.message }} is in ${{ inputs.environment }}"
-          # exit 1
+          
+          ## fake failure stuff for testing...
+          # if ( "${{ inputs.environment }}" -match 'dev' ){  exit 1  }
