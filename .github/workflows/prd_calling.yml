@@ -18,48 +18,18 @@ on:
       - .github/workflows/reusable.yml
       - .github/workflows/*_calling.yml
 
+
 permissions:
   contents: read
   actions: read
 
-# env:
-#   check_workflow_name: qa_calling
 
 jobs: 
-  # check-prior-deployment:    ### IF WE'RE GOING TO DO THIS, NEED TO HAVE A 'WAIT FOR DEV' STEP FIRST
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v4
-  #     - name: Check Status
-  #       env:  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       shell: pwsh  run: |
-            # Get previous prod workflow SHA
-              # if ^ !match THIS workflow SHA
-                # Confirm dev/qa workflows with matching SHA succeeded
-              # else
-                # who cares
-
-  #         $json_output  = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,name,displayTitle,event,headSha,status,conclusion
-  #         $final_output = $json_output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
-  #         $matching_sha = $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
-  #         Write-Output "Pull request Head SHA:  "
-  #         write-output "${{ github.event.pull_request.head.sha }}"
-
-  #         if ( $matching_sha.conclusion -eq "success" ) {
-  #           write-output "Found successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  $($matching_sha.headSha)"
-  #           exit 0
-  #         }
-  #         else {
-  #           write-output "Could not find successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  ${{ github.event.pull_request.head.sha }}"
-  #           $final_output | ft
-  #           exit 1
-  #         }
-
-
-  call-workflow:
-    # if: ( contains(needs.check-qa-deployment.result, 'success') || contains(needs.check-qa-deployment.result, 'skipped'))
-    # needs: check-qa-deployment
+  call-workflow: 
+    # runs only if a PR (from 'staging') is merged to main
+    if: >- 
+      github.event_name != 'pull_request'  ||
+      github.event.pull_request.head == 'staging'
     uses: ./.github/workflows/reusable.yml
     with:
       environment: prd

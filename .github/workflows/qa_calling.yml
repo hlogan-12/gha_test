@@ -20,60 +20,43 @@ on:
 permissions:
   contents: read
   actions: read
-  # pull-requests: write
 
 
 env:
   WAIT_WORKFLOW_NAME: dev_calling.yml
 
+
 jobs:
-  # check-dev-deployment:    ### IF WE'RE GOING TO DO THIS, NEED TO HAVE A 'WAIT FOR DEV' STEP FIRST
-  #   if: ${{ github.event_name == 'pull_request' }}
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repo   uses: actions/checkout@v4
-  #     - name: Check Status
-  #       env:  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       shell: pwsh  run: |
-  #         $json_output  = gh run list -w "${{ env.check_workflow_name }}" --json createdAt,name,displayTitle,event,headSha,status,conclusion
-  #         $final_output = $json_output | ConvertFrom-Json | Sort-object -Property CreatedAt -Descending
-  #         $matching_sha = $final_output | where-object { $_.event -eq 'pull_request' -and $_.headSha -eq "${{ github.event.pull_request.head.sha }}" }
-  #         Write-Output "Pull request Head SHA:  "
-  #         write-output "${{ github.event.pull_request.head.sha }}"
-
-  #         if ( $matching_sha.conclusion -eq "success" ) {
-  #           write-output "Found successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  $($matching_sha.headSha)"
-  #           exit 0
-  #         }
-  #         else {
-  #           write-output "Could not find successful `'${{ env.check_workflow_name }}`' deployment with matching Head SHA:  ${{ github.event.pull_request.head.sha }}"
-  #           $final_output | ft
-  #           exit 1
-  #         }
-
-  # Give dev workflow a chance to start
-  # Wait for dev workflow to complete
-
   wait:
-    if: ${{ github.event_name == 'pull_request' }}
+    # if trigger = pull request, let dev finish before running QA AND pull request is not coming f/ main
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head != 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Sleep
         shell: bash
-        run: sleep 10s
+        run: sleep 5s
 
-      - name: WAIT
+      - name: Wait for dev
         uses: codex-/await-local-workflow-run@v1
         with:
-          token: ${{ github.token }} # The standard action GitHub token should be enough to poll the local workflows.
+          token: ${{ github.token }}
           workflow: ${{ env.WAIT_WORKFLOW_NAME }}
           timeout_mins: 15
           poll_interval_ms: 3000
 
-
   call-workflow:
-    uses: ./.github/workflows/reusable.yml
     needs: wait
+    # if not a pull request && 'wait' job !fail (if it 'skips' or 'succeeds') AND pull request is not coming f/ main
+    if: >-
+      ( !failure() ) &&
+      (
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head != 'main' &&
+        (!contains(github.event.pull_request.head, 'no_deploy'))
+      )   
+    uses: ./.github/workflows/reusable.yml
     with:
       environment: qa
       message: this is the qa deployment
