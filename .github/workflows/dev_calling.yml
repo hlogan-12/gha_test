@@ -23,8 +23,7 @@ jobs:
     # if trigger is not a PR, or if it IS a PR, but is NOT from the main branch
     if: >-
       github.event_name != 'pull_request' ||
-      github.event.pull_request.head != 'main' &&
-      (!contains(github.event.pull_request.head, 'no_deploy'))
+      github.event.pull_request.head != 'main'
     uses: ./.github/workflows/reusable.yml
     with:
       environment: dev
