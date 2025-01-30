@@ -11,7 +11,7 @@ on:
   pull_request:
     branches:
       - 'staging'
-      - '!main'
+      - '!no_deploy'
     paths:
       - source/test_workflows/**
       - .github/workflows/reusable.yml
@@ -20,10 +20,6 @@ on:
 
 jobs:
   call-workflow:
-    # if trigger is not a PR, or if it IS a PR, but is NOT from the main branch
-    if: >-
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head != 'main'
     uses: ./.github/workflows/reusable.yml
     with:
       environment: dev
