@@ -25,8 +25,11 @@ permissions:
 
 
 jobs: 
-  call-workflow:
-    if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
+  call-workflow: 
+    # runs only if a PR (from 'staging') is merged to main
+    if: >- 
+      github.event_name != 'pull_request'  ||
+      github.event.pull_request.head == 'staging'
     uses: ./.github/workflows/reusable.yml
     with:
       environment: prd

@@ -28,7 +28,10 @@ env:
 
 jobs:
   wait:
-    if: ${{ github.event_name == 'pull_request' }}
+    # if trigger = pull request, let dev finish before running QA AND pull request is not coming f/ main
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head != 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Sleep
@@ -44,8 +47,16 @@ jobs:
           poll_interval_ms: 3000
 
   call-workflow:
-    uses: ./.github/workflows/reusable.yml
     needs: wait
+    # if not a pull request && 'wait' job !fail (if it 'skips' or 'succeeds') AND pull request is not coming f/ main
+    if: >-
+      ( !failure() ) &&
+      (
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head != 'main' &&
+        (!contains(github.event.pull_request.head, 'no_deploy'))
+      )   
+    uses: ./.github/workflows/reusable.yml
     with:
       environment: qa
       message: this is the qa deployment
