@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   submit-pr:
-    if: github.event.pull_request.merged == true  # && !contains(github.head_ref, 'no_main') ### add this to allow option to prevent main auto-PR
+    if: github.event.pull_request.merged == true  # && !contains(github.head_ref, 'no_deploy') ### add this to allow option to prevent main auto-PR
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
