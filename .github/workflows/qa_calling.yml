@@ -11,6 +11,7 @@ on:
   pull_request:
     branches:
       - 'staging'
+      - '!main'
     paths:
       - source/test_workflows/**
       - .github/workflows/reusable.yml
