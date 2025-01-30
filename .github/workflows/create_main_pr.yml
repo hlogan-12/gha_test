@@ -35,9 +35,8 @@ jobs:
         shell: pwsh
         run: |
           write-output "Creating pull request: "
-          gh pr create --base main --head '${{ github.head_ref  }}' --title "${{ github.head_ref }} - auto PR" --body "Pull Request Details:
+          gh pr create --base main --head '${{ github.base_ref }}' --title "${{ github.base_ref }} - auto PR" --body "Pull Request Details:
 
-            event_name: ${{ github.event_name }}
             head_ref:  ${{ github.head_ref }}
             sha: ${{ github.sha }}
             actor: ${{ github.actor }}

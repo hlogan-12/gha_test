@@ -53,6 +53,7 @@ jobs:
 
   # Give dev workflow a chance to start
   # Wait for dev workflow to complete
+
   wait:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
@@ -74,6 +75,6 @@ jobs:
     uses: ./.github/workflows/reusable.yml
     needs: wait
     with:
-      environment: ${{ vars.ENV_NAME }}
-      message: this is the ${{ vars.ENV_NAME }} deployment
+      environment: qa
+      message: this is the qa deployment
           

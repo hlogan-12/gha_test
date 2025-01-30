@@ -62,5 +62,5 @@ jobs:
     # needs: check-qa-deployment
     uses: ./.github/workflows/reusable.yml
     with:
-      environment: ${{ vars.ENV_NAME}}
-      message: 'this is the ${{ vars.ENV_NAME}} deployment'
+      environment: prd
+      message: 'this is the prd deployment'
