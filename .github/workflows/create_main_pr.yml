@@ -11,7 +11,7 @@ on:
     types:
       - closed
     branches:
-      - 'staging'
+      - 'staging' ## pw_staging  ### add other branches...
     # paths:
     #   - source/**
     #   - .github/workflows/reusable.yml
@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   submit-pr:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true  # && !contains(github.head_ref, 'no_main') ### add this to allow option to prevent main auto-PR
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -35,4 +35,12 @@ jobs:
         shell: pwsh
         run: |
           write-output "Creating pull request: "
-          gh pr create --base main --head staging --title "Testing auto-env deployments" --body "Yes"
+          gh pr create --base main --head '${{ github.head_ref  }}' --title "${{ github.head_ref }} - auto PR" --body "Pull Request Details:
+            event_name:   ${{ github.event_name }}
+            event_path:   ${{ github.event_path }}
+            head branch:  ${{ github.head_ref }}
+            actor:        ${{ github.actor }}
+            workflow_ref: ${{ github.workflow_ref }}
+            workflow_sha: ${{ github.workflow_sha }}
+            ref_name:     ${{ github.ref_name }}
+            path:         ${{ github.path }}"
