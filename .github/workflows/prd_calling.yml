@@ -26,8 +26,13 @@ permissions:
 
 jobs: 
   call-workflow: 
-    # runs only if a PR (from 'staging') is merged to main
-    if: github.event_name != 'pull_request' || github.event.pull_request.head == 'staging'
+    # runs if event != pull request, or if the pull request head is from 'staging' and doesn't contain 'no_deploy' in title.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (
+        github.event.pull_request.head == 'staging' &&
+        !contains( github.event.pull_request.title, '[NO_DEPLOY]' )
+      )
     uses: ./.github/workflows/reusable.yml
     with:
       environment: prd

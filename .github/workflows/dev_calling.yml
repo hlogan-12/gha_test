@@ -11,15 +11,18 @@ on:
   pull_request:
     branches:
       - 'staging'
-      - '!no_deploy'
-    paths:
-      - source/test_workflows/**
-      - .github/workflows/reusable.yml
-      - .github/workflows/*_calling.yml
+    # paths:
+    #   - source/test_workflows/**
+    #   - .github/workflows/reusable.yml
+    #   - .github/workflows/*_calling.yml
 
 
 jobs:
   call-workflow:
+    # only run if the head branch is NOT main and does not contain 'no_deploy'
+    if: >-
+      github.head_ref != 'main' &&
+      ( !contains(github.head_ref, 'no_deploy') )
     uses: ./.github/workflows/reusable.yml
     with:
       environment: dev
