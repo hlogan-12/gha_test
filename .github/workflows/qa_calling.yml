@@ -58,21 +58,3 @@ jobs:
     with:
       environment: qa
       message: this is the qa deployment
-
-
-  failure-issue:
-    needs: call-workflow
-    if: failure()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Check Status
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: pwsh
-        run: |
-          gh issue create --title "${{ github.workflow }} - Failure" --body 'Failure details:
-          workflow:  ${{ github.workflow }}
-          event:     ${{ github.event_name }}'
