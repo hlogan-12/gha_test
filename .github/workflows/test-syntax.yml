@@ -1,0 +1,30 @@
+name: Buddy
+
+run-name: buddy_runnin
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  buddy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test_syntax
+        shell: pwsh
+        run: |
+          write-output "double quotes: "  
+          "${{ github.head_ref }}"
+
+          write-output "single quotes: "  
+          '${{ github.head_ref }}'
+
+          write-output "same? :"
+          "${{ github.head_ref }}" -eq '${{ github.head_ref }}'
+
+          if( "${{ github.head_ref }}" -match "no_deploy" ) {
+            write-output "matches 'no_deploy'"
+          }
+          else {
+            write-output "doesn`'t"
+          }
