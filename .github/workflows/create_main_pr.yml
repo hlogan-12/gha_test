@@ -35,7 +35,7 @@ jobs:
         shell: pwsh
         run: |
           # Check if a pull request already exists and exit/succeed if it does
-          $existing = gh pr ls --head "${{ github.base_ref }}" --base main --json title
+          $existing = gh pr ls --head "${{ github.base_ref }}" --base main --json title | ConvertFrom-Json
           if( $existing ) {
             write-output "Pull request already exists and will be auto-updated with changes to '${{ github.base_ref}}'"
             exit 0
