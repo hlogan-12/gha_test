@@ -71,7 +71,7 @@ jobs:
     # if PR not coming f/ main... if PR not coming f/ 'no_deploy' branch... and if dev did not fail
     if: >-
       github.head_ref != 'main' &&
-      ( ! contains(github.head_ref, 'no_deploy') ) &&
+      ${{ !contains(github.head_ref, 'no_deploy') }} &&
       ${{ !failure() }}
     uses: ./.github/workflows/reusable.yml
     with:
