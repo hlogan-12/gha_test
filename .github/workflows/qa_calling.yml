@@ -29,42 +29,23 @@ env:
 jobs:
   wait-for-dev:
     # if trigger is a PR that is not coming from 'main' or a 'no_deploy' branch
-    # if: >-
-    #   github.event_name == 'pull_request' &&
-    #   github.head_ref != 'main' &&
-    #   ( !contains(github.head_ref, 'no_deploy') )
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.head_ref != 'main' &&
+      ! contains(github.head_ref, 'no_deploy')
     runs-on: ubuntu-latest
     steps:
-      # - name: Sleep
-      #   shell: bash
-      #   run: sleep 5s
+      - name: Sleep
+        shell: bash
+        run: sleep 5s
 
-      # - name: Wait for dev
-      #   uses: codex-/await-local-workflow-run@v1
-      #   with:
-      #     token: ${{ github.token }}
-      #     workflow: ${{ env.WAIT_WORKFLOW_NAME }}
-      #     timeout_mins: 15
-      #     poll_interval_ms: 3000
-
-      - name: output head ref
-        shell: pwsh
-        run: |
-          Write-Output "${{ github.head_ref }}"
-          "${{ github.head_ref }}" -ne 'main'
-          "${{ github.head_ref }}" -notmatch 'no_deploy'
-          "if statement:"
-          
-          write-output "! contains(github.head_ref, 'no_deploy'):  "
-          [bool]"${{ ! (contains(github.head_ref, 'no_deploy')) }}"
-
-          write-output "github.head_ref != 'main' :"
-          [bool]"${{ github.head_ref != 'main' }}"
-
-          "output:  "
-          [bool]"${{ !contains(github.head_ref, 'no_deploy') }}" -and `
-          [bool]"${{ github.head_ref != 'main' }}" -and `
-          [bool]'true'
+      - name: Wait for dev
+        uses: codex-/await-local-workflow-run@v1
+        with:
+          token: ${{ github.token }}
+          workflow: ${{ env.WAIT_WORKFLOW_NAME }}
+          timeout_mins: 10
+          poll_interval_ms: 3000
 
   call-workflow:
     needs: wait-for-dev
