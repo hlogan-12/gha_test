@@ -61,7 +61,7 @@ jobs:
 
   pass-deployment:
     needs: [wait-for-dev, call-workflow]
-    if: ${{ needs.*.result == 'skipped' }}
+    if: always() && ${{ needs.*.result == 'skipped' }}
     runs-on: ubuntu-latest
     steps:
       - name: succeed

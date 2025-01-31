@@ -30,7 +30,7 @@ jobs:
 
   pass-deployment:
     needs: [call-workflow]
-    if: ${{ needs.call-workflow.result == 'skipped' }}
+    if: always() && ${{ needs.call-workflow.result == 'skipped' }}
     runs-on: ubuntu-latest
     steps:
       - name: succeed
