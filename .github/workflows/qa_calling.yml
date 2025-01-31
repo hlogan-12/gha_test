@@ -28,7 +28,7 @@ env:
 
 jobs:
   wait-for-dev:
-    # if trigger is a PR and 
+    # if trigger is a PR that is not coming from 'main' or a 'no_deploy' branch
     if: >-
       github.event_name == 'pull_request' &&
       github.head_ref != 'main' &&
@@ -47,8 +47,15 @@ jobs:
           timeout_mins: 15
           poll_interval_ms: 3000
 
+      - name: output head ref
+        shell: pwsh
+        run: |
+          Write-Output "${{ github.head_ref }}"
+          "${{ github.head_ref }}" -match 'no_deploy'
+
   call-workflow:
     needs: wait-for-dev
+    # if PR not coming f/ main... if PR not coming f/ 'no_deploy' branch... and if dev did not fail
     if: >-
       github.head_ref != 'main' &&
       ( !contains(github.head_ref, 'no_deploy') ) &&
