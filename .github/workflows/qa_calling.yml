@@ -56,7 +56,7 @@ jobs:
           "if statement:"
           
           write-output "! contains(github.head_ref, 'no_deploy'):  "
-          [bool]"${{ !contains(github.head_ref, 'no_deploy') }}"
+          [bool]"${{ ! (contains(github.head_ref, 'no_deploy')) }}"
 
           write-output "github.head_ref != 'main' :"
           [bool]"${{ github.head_ref != 'main' }}"
@@ -71,8 +71,8 @@ jobs:
     # if PR not coming f/ main... if PR not coming f/ 'no_deploy' branch... and if dev did not fail
     if: >-
       github.head_ref != 'main' &&
-      ${{ !contains(github.head_ref, 'no_deploy') }} &&
-      ${{ !failure() }}
+      ! (contains(github.head_ref, 'no_deploy')) &&
+      ! failure()
     uses: ./.github/workflows/reusable.yml
     with:
       environment: qa
