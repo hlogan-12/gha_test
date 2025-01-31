@@ -49,7 +49,7 @@ jobs:
 
   call-workflow:
     needs: wait-for-dev
-    if: ! failure()
+    if: ${{ !failure() }}
     uses: ./.github/workflows/reusable.yml
     with:
       environment: qa
