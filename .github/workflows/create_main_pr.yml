@@ -34,9 +34,22 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
-          write-output "Creating pull request: "
-          gh pr create --base main --head '${{ github.base_ref }}' --title "${{ github.base_ref }} - auto PR" --body "Pull Request Details:
+          write-output "Creating pull request..."
 
+          # if feature branch had 'no_deploy', add it to title of this new PR
+          if( "${{ github.head_ref }}" -match "no_deploy" ) {
+            $title = "${{ github.base_ref }} - auto PR"
+          } else {
+            $title = "[NO_DEPLOY] ${{ github.base_ref }} - auto PR"
+          }
+
+          # get 'CHG' all unqiue 'chg' ticket numbers and format into a comma separated string
+          $closed_pr_content = '${{ github.event.pull_request.title }}' + '${{ github.event.pull_request.body }}'
+          $CHG_tickets       = (($closed_pr_content | select-string -Pattern 'chg\d{7}' -AllMatches).matches.value | sort-object -unique) -join ', '
+
+          # create pull request
+          gh pr create --base main --head '${{ github.base_ref }}' --title $title --body "Pull Request Details: `n
+            Change ticket(s):  $($CHG_tickets)
             head_ref:  ${{ github.head_ref }}
             sha: ${{ github.sha }}
             actor: ${{ github.actor }}
