@@ -55,6 +55,13 @@ jobs:
           "${{ github.head_ref }}" -notmatch 'no_deploy'
           "if statement:"
           
+          write-output "! contains(github.head_ref, 'no_deploy') }}:  "
+          [bool]"${{ !contains(github.head_ref, 'no_deploy') }}"
+
+          write-output "github.head_ref != 'main' :"
+          [bool]"${{ github.head_ref != 'main' }}"
+
+          "output:  "
           [bool]"${{ !contains(github.head_ref, 'no_deploy') }}" -and `
           [bool]"${{ github.head_ref != 'main' }}" -and `
           [bool]'true'
