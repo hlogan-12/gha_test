@@ -49,7 +49,10 @@ jobs:
 
   call-workflow:
     needs: wait-for-dev
-    if: ${{ !failure() }}
+    if: >-
+      github.head_ref != 'main' &&
+      ( !contains(github.head_ref, 'no_deploy') ) &&
+      ${{ !failure() }}
     uses: ./.github/workflows/reusable.yml
     with:
       environment: qa
