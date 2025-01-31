@@ -52,7 +52,7 @@ jobs:
         run: |
           Write-Output "${{ github.head_ref }}"
           "${{ github.head_ref }}" -ne 'main'
-          "${{ github.head_ref }}" -notmatch 'no_deploy
+          "${{ github.head_ref }}" -notmatch 'no_deploy'
 
   call-workflow:
     needs: wait-for-dev
