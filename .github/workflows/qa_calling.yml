@@ -58,4 +58,3 @@ jobs:
     with:
       environment: qa
       message: this is the qa deployment
-          
