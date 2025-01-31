@@ -11,10 +11,10 @@ on:
   pull_request:
     branches:
       - 'staging'
-    # paths:
-    #   - source/test_workflows/**
-    #   - .github/workflows/reusable.yml
-    #   - .github/workflows/*_calling.yml
+    paths:
+      - source/test_workflows/**
+      - .github/workflows/reusable.yml
+      - .github/workflows/*_calling.yml
 
 
 jobs:
@@ -22,15 +22,15 @@ jobs:
     # only run if the head branch is NOT main and does not contain 'no_deploy'
     if: >-
       github.head_ref != 'main' &&
-      ( !contains(github.head_ref, 'no_deploy') )
+      ! contains(github.head_ref, 'no_deploy')
     uses: ./.github/workflows/reusable.yml
     with:
       environment: dev
       message: this is the dev deployment
 
   # failure-issue:
-  #   if: failure()
   #   needs: call-workflow
+  #   if: failure()
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Checkout repo

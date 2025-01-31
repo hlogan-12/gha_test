@@ -34,6 +34,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
+          # Check if a pull request already exists and exit/succeed if it does
+          $existing = gh pr ls --head "${{ github.base_ref }}" --base main --json title
+          if( $existing ) {
+            write-output "Pull request already exists and will be auto-updated with changes to '${{ github.base_ref}}'"
+            exit 0
+          }
+
           write-output "Creating pull request..."
 
           # if feature branch had 'no_deploy', add it to title of this new PR, so won't auto-run prod env deployment
@@ -50,8 +57,4 @@ jobs:
             sha: ${{ github.sha }}
             actor: ${{ github.actor }}
             workflow_sha: ${{ github.workflow_sha }}
-            ref_name: ${{ github.ref_name }}
             path: ${{ github.path }}"
-
-### Get applicable DEV and QA deployments (same SHA) and confirm success
-### ADD RELEVANT TARGET ENVIRONMENT...
