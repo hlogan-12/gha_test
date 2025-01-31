@@ -11,7 +11,6 @@ on:
   pull_request:
     branches:
       - 'staging'
-      - '!no_deploy'
     paths:
       - source/test_workflows/**
       - .github/workflows/reusable.yml
@@ -28,8 +27,12 @@ env:
 
 
 jobs:
-  wait:
-    if: github.event_name == 'pull_request'
+  wait-for-dev:
+    # if trigger is a PR and 
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.head_ref != 'main' &&
+      ( !contains(github.head_ref, 'no_deploy') )
     runs-on: ubuntu-latest
     steps:
       - name: Sleep
@@ -45,9 +48,8 @@ jobs:
           poll_interval_ms: 3000
 
   call-workflow:
-    needs: wait
-    # if not a pull request && 'wait' job !fail (if it 'skips' or 'succeeds') AND pull request is not coming f/ main
-    if: ( !failure() )
+    needs: wait-for-dev
+    if: ${{ !failure() }}
     uses: ./.github/workflows/reusable.yml
     with:
       environment: qa
