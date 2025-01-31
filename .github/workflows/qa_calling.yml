@@ -54,7 +54,7 @@ jobs:
           "${{ github.head_ref }}" -ne 'main'
           "${{ github.head_ref }}" -notmatch 'no_deploy'
           "logic:  "
-          ${{ !contains(github.head_ref, 'no_deploy') }}
+          "${{ !contains(github.head_ref, 'no_deploy') }}"
 
   call-workflow:
     needs: wait-for-dev
