@@ -18,12 +18,7 @@ on:
       - .github/workflows/reusable.yml
       - .github/workflows/*_calling.yml
 
-
-permissions:
-  contents: read
-  actions: read
-
-
+      
 jobs: 
   call-workflow: 
     # runs if event != pull request, or if the pull request head is from 'staging' and doesn't contain 'no_deploy' in title.

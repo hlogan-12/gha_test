@@ -1,0 +1,4 @@
+| Branch Name | Branch Protection Rules | Notes/Justification |
+| --- | --- | --- |
+| pw_staging | - [x] Require a pull request before merging<br>&ensp;&ensp;&ensp;\-Require approvals (1)<br>&ensp;&ensp;&ensp;\-Dismiss stale pull request approvals when new commits are pushed<br>\-Require successful deployments to 'sgdev_pw' and 'sgqa_pw' environments<br>_NOTE: "Do not allow bypassing the above settings" should NOT be checked._ | Requiring successful deployments to dev/qa is necessary to ensure no bad code is pushed to prod.  However, there are cases (e.g., pushing documentation updates) where we do not want to deploy when the pull request is created. |
+| main | \-Require a pull request before merging<br>&ensp;&ensp;&ensp;\-Require approvals (1)<br>&ensp;&ensp;&ensp;\-Dismiss stale pull request approvals when new commits are pushed<br>\-Do not allow bypassing the above settings" should NOT be checked._ |  |
