@@ -60,8 +60,7 @@ jobs:
       message: this is the qa deployment
 
   pass-deployment:
-    needs: [wait-for-dev, call-workflow]
-    if: always() && ${{ needs.*.result == 'skipped' }}
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: succeed
