@@ -11,10 +11,10 @@ on:
   pull_request:
     branches:
       - 'staging'
-    # paths:
-    #   - source/test_workflows/**
-    #   - .github/workflows/reusable.yml
-    #   - .github/workflows/*_calling.yml
+    paths:
+      - source/test_workflows/**
+      - .github/workflows/reusable.yml
+      - .github/workflows/*_calling.yml
 
 
 jobs:
