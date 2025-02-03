@@ -41,7 +41,7 @@ jobs:
           write-output "Creating pull request..."
 
           # if feature branch had 'no_deploy', add it to title of this new PR, so won't auto-run prod env deployment
-          $title = $("${{ github.head_ref }}" -match "no_deploy" ? "[NO_DEPLOY] " : "") + "${{ github.base_ref }} -> ${{ github.base_ref }} -- auto pull request"
+          $title = $("${{ github.head_ref }}" -match "no_deploy" ? "[NO_DEPLOY] " : "") + "${{ github.head_ref }} -> ${{ github.base_ref }} -- auto pull request"
 
           # get 'CHG' all unqiue 'chg' ticket numbers and format into a comma separated string
           $closed_pr_content = "${{ github.event.pull_request.title }}" + "${{ github.event.pull_request.body }}"
