@@ -1,6 +1,6 @@
-name: qa_calling
+name: qa_ca_calling
 
-run-name: qa_calling
+run-name: qa_ca_calling
 
 on:
   # schedule:
@@ -13,8 +13,8 @@ on:
       - 'staging'
     paths:
       - source/test_workflows/**
-      - .github/workflows/reusable.yml
-      - .github/workflows/*_calling.yml
+      - .github/workflows/ca_reusable.yml
+      - .github/workflows/*_ca_calling.yml
 
 
 permissions:
@@ -23,7 +23,7 @@ permissions:
 
 
 env:
-  WAIT_WORKFLOW_NAME: dev_calling.yml
+  WAIT_WORKFLOW_NAME: dev_ca_calling.yml
 
 
 jobs:
@@ -51,10 +51,10 @@ jobs:
     needs: wait-for-dev
     # if PR not coming f/ main... if PR not coming f/ 'no_deploy' branch... and if dev did not fail
     if: >-
-      contains(github.head_ref, 'feature_pw') &&
+      contains(github.head_ref, 'feature_ca') &&
       ! contains(github.head_ref, 'no_deploy') &&
       ! failure()
-    uses: ./.github/workflows/reusable.yml
+    uses: ./.github/workflows/ca_reusable.yml
     with:
-      environment: qa
-      message: this is the qa deployment
+      environment: ca_qa
+      message: this is the ca_qa deployment
