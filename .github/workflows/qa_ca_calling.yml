@@ -12,7 +12,7 @@ on:
     branches:
       - 'staging'
     paths:
-      - source/test_workflows/**
+      - source/ca_workflows/**
       - .github/workflows/ca_reusable.yml
       - .github/workflows/*_ca_calling.yml
 
