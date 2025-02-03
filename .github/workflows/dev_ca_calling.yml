@@ -1,6 +1,6 @@
-name: dev_calling
+name: dev_ca_calling
 
-run-name: dev_calling
+run-name: dev_ca_calling
 
 on:
   # schedule:
@@ -12,20 +12,20 @@ on:
     branches:
       - 'staging'
     paths:
-      - source/test_workflows/**
-      - .github/workflows/reusable.yml
-      - .github/workflows/*_calling.yml
+      - source/ca_workflows/**
+      - .github/workflows/ca_reusable.yml
+      - .github/workflows/*_ca_calling.yml
 
-      
+
 jobs:
   call-workflow:
     if: >-
-      contains(github.head_ref, 'feature_pw') &&
+      contains(github.head_ref, 'feature_ca') &&
       ! contains(github.head_ref, 'no_deploy')
-    uses: ./.github/workflows/reusable.yml
+    uses: ./.github/workflows/ca_reusable.yml
     with:
-      environment: dev
-      message: this is the dev deployment
+      environment: ca_dev
+      message: this is the ca_dev deployment
 
   # failure-issue:
   #   needs: call-workflow

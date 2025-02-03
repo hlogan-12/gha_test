@@ -1,6 +1,6 @@
-name: prd_calling
+name: prd_ca_calling
 
-run-name: prd_calling
+run-name: prd_ca_calling
 
 on:
   # schedule:
@@ -14,9 +14,9 @@ on:
     branches:
       - 'main'
     paths:
-      - source/test_workflows/**
-      - .github/workflows/reusable.yml
-      - .github/workflows/*_calling.yml
+      - source/ca_workflows/**
+      - .github/workflows/ca_reusable.yml
+      - .github/workflows/*_ca_calling.yml
 
       
 jobs: 
@@ -26,10 +26,10 @@ jobs:
       github.event_name != 'pull_request' ||
       (
         github.event.pull_request.head == 'staging' &&
-        contains( github.event.pull_request.body, 'feature_pw') &&
+        contains( github.event.pull_request.body, 'feature_ca') &&
         ! contains( github.event.pull_request.title, '[NO_DEPLOY]' )
       )
-    uses: ./.github/workflows/reusable.yml
+    uses: ./.github/workflows/ca_reusable.yml
     with:
-      environment: prd
-      message: 'this is the prd deployment'
+      environment: ca_prd
+      message: 'this is the ca_prd deployment'
