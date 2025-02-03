@@ -44,7 +44,8 @@ jobs:
           $title = $("${{ github.head_ref }}" -match "no_deploy" ? "[NO_DEPLOY] " : "") + "${{ github.head_ref }} -> ${{ github.base_ref }} -- auto pull request"
           
           # Tell user to review appropriate environment deployments...
-          $review_reminder = "If applicable, review the appropriate deployments and ensure they succeeded: `n" + "${{ github.repositoryUrl }}"
+          $actions_url = "https://github.com/" + "${{ github.repositoryUrl }}" + "/actions"
+          $review_reminder = "If applicable, review the appropriate deployments and ensure they succeeded: `n$($actions_url)"
 
           # get 'CHG' all unqiue 'chg' ticket numbers and format into a comma separated string
           $closed_pr_content = "${{ github.event.pull_request.title }}" + "${{ github.event.pull_request.body }}"
