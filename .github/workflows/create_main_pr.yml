@@ -11,11 +11,7 @@ on:
     types:
       - closed
     branches:
-      - 'staging' ## pw_staging  ### add other branches...
-    # paths:
-    #   - source/**
-    #   - .github/workflows/reusable.yml
-    #   - .github/workflows/*_calling.yml
+      - 'staging'
 
 permissions:
   contents: write
@@ -23,6 +19,7 @@ permissions:
 
 jobs:
   submit-pr:
+    # if the pull request was MERGED
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -44,7 +41,11 @@ jobs:
           write-output "Creating pull request..."
 
           # if feature branch had 'no_deploy', add it to title of this new PR, so won't auto-run prod env deployment
-          $title = $("${{ github.head_ref }}" -match "no_deploy" ? "[NO_DEPLOY] " : "") + "${{ github.base_ref }} - auto PR"
+          $title = $("${{ github.head_ref }}" -match "no_deploy" ? "[NO_DEPLOY] " : "") + "${{ github.head_ref }} -> ${{ github.base_ref }} -- auto pull request"
+          
+          # Tell user to review appropriate environment deployments...
+          $actions_url = "https://github.com/" + "${{ github.repository }}" + "/actions"
+          $review_reminder = "If applicable, review the appropriate deployments and ensure they succeeded: `n$($actions_url)"
 
           # get 'CHG' all unqiue 'chg' ticket numbers and format into a comma separated string
           $closed_pr_content = "${{ github.event.pull_request.title }}" + "${{ github.event.pull_request.body }}"
@@ -57,4 +58,5 @@ jobs:
             sha: ${{ github.sha }}
             actor: ${{ github.actor }}
             workflow_sha: ${{ github.workflow_sha }}
-            path: ${{ github.path }}"
+            
+            $review_reminder"
