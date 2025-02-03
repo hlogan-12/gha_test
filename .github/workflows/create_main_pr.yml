@@ -42,6 +42,9 @@ jobs:
 
           # if feature branch had 'no_deploy', add it to title of this new PR, so won't auto-run prod env deployment
           $title = $("${{ github.head_ref }}" -match "no_deploy" ? "[NO_DEPLOY] " : "") + "${{ github.head_ref }} -> ${{ github.base_ref }} -- auto pull request"
+          
+          # Tell user to review appropriate environment deployments...
+          $review_reminder = "If applicable, review the appropriate deployments and ensure they succeeded: `n" + "${{ github.repositoryUrl }}"
 
           # get 'CHG' all unqiue 'chg' ticket numbers and format into a comma separated string
           $closed_pr_content = "${{ github.event.pull_request.title }}" + "${{ github.event.pull_request.body }}"
@@ -53,4 +56,6 @@ jobs:
             head_ref:  ${{ github.head_ref }}
             sha: ${{ github.sha }}
             actor: ${{ github.actor }}
-            workflow_sha: ${{ github.workflow_sha }}"
+            workflow_sha: ${{ github.workflow_sha }}
+            
+            $review_reminder"
