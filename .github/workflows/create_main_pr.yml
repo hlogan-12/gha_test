@@ -56,5 +56,4 @@ jobs:
             head_ref:  ${{ github.head_ref }}
             sha: ${{ github.sha }}
             actor: ${{ github.actor }}
-            workflow_sha: ${{ github.workflow_sha }}
-            path: ${{ github.path }}"
+            workflow_sha: ${{ github.workflow_sha }}"
