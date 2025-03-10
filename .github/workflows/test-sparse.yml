@@ -36,8 +36,8 @@ jobs:
           $HTMLfILES
 
           # Create destination dir if not exist
-          if( ! (test-path ${{ env.DEST_DIR }} ) {
-            new-item -path ${{ env.DEST_DIR }} -itemtype directory -force
+          if( -not (test-path ${{ env.DEST_DIR }}) ) {
+            New-Item -Path ${{ env.DEST_DIR }} -ItemType Directory -Force
           }
 
           $htmlFiles | copy-item -destination ${{ env.DEST_DIR }} -force
