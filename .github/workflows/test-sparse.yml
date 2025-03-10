@@ -7,8 +7,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - source/sparse-test/*.html
+
+env:
+  SOURCE_DIR: source/sparse-test
+  DEST_DIR: other
 
 jobs:
   job1:
@@ -25,9 +27,35 @@ jobs:
           sparse-checkout: |
             source/sparse-test
 
+      - name: copy files
+        shell: pwsh
+        run: |
+          $htmlFiles    = Get-ChildItem -path ${{ env.SOURCE_DIR }} -recurse -filter *.html
+          $HTMLfILES
+          $htmlFiles | copy-item -destination ${{ env.DEST_DIR }} -force
+
+          # $templateFile = Get-Content -path .\swa\template_index.html -Raw
+
+          # build list
+          # foreach ( $file in $htmlFiles ) {
+          #   $line = "  <li><a href=`"$($file.FullName)`">$($file.Name)</a></li>"
+          # }
+
+      - name: Push updated Maester Tests Reports
+        #if: steps.changed-maester-tests-reports.outputs.any_changed == 'true'
+        run: |
+            git config --local user.name actions-user
+            git config --local user.email "actions@github.com" 
+            git fetch
+            git merge 
+            git add .
+            git commit -m "Auto updating maester tests reports"
+            git push -f
+
       - name: file checks
         shell: pwsh
         run: |
-          Get-ChildItem -path .\source\sparse-test -recurse
+
+          Get-ChildItem -path ${{ env.DEST_DIR }} -recurse
 
           write-output " `n--------------------------`n "
