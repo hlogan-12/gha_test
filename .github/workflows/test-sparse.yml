@@ -23,11 +23,11 @@ jobs:
           submodules: true
           lfs: true
           sparse-checkout: |
-            source/sparse-test/*.html
+            source/sparse-test
 
       - name: file checks
         shell: pwsh
         run: |
-          Get-ChildItem -path .\sparse-test -recurse
+          Get-ChildItem -path .\source\sparse-test -recurse
 
           write-output " `n--------------------------`n "
