@@ -27,7 +27,8 @@ jobs:
           submodules: true
           lfs: true
           sparse-checkout: |
-            source/sparse-test
+            ${{ ENV.SOURCE_DIR }}
+            ${{ ENV.DEST_DIR }}
 
       - name: copy files
         shell: pwsh
