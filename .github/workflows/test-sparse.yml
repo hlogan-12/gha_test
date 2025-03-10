@@ -28,42 +28,34 @@ jobs:
           lfs: true
           sparse-checkout: |
             source/sparse-test
-            
+
       - name: copy files
-        uses: canastro/copy-file-action@master
-        with:
-          source: ${{ env.SOURCE_DIR }}
-          target: ${{ env.DEST_DIR }}
+        shell: pwsh
+        run: |
+          $htmlFiles    = Get-ChildItem -path ${{ env.SOURCE_DIR }} -recurse -filter *.html
+          $HTMLfILES
 
-      # - name: copy files
-      #   shell: pwsh
-      #   run: |
-      #     $htmlFiles    = Get-ChildItem -path ${{ env.SOURCE_DIR }} -recurse -filter *.html
-      #     $HTMLfILES
+          # Create destination dir if not exist
+          if( -not (test-path ${{ env.DEST_DIR }}) ) {
+            New-Item -Path ${{ env.DEST_DIR }} -ItemType Directory -Force
+          }
 
-      #     # Create destination dir if not exist
-      #     if( -not (test-path ${{ env.DEST_DIR }}) ) {
-      #       New-Item -Path ${{ env.DEST_DIR }} -ItemType Directory -Force
-      #     }
+          $htmlFiles | copy-item -destination ${{ env.DEST_DIR }} -force
 
-      #     $htmlFiles | copy-item -destination ${{ env.DEST_DIR }} -force
+          # $templateFile = Get-Content -path .\swa\template_index.html -Raw
 
-      #     # $templateFile = Get-Content -path .\swa\template_index.html -Raw
-
-      #     # build list
-      #     # foreach ( $file in $htmlFiles ) {
-      #     #   $line = "  <li><a href=`"$($file.FullName)`">$($file.Name)</a></li>"
-      #     # }
+          # build list
+          # foreach ( $file in $htmlFiles ) {
+          #   $line = "  <li><a href=`"$($file.FullName)`">$($file.Name)</a></li>"
+          # }
 
       - name: Push added files
         #if: steps.changed-maester-tests-reports.outputs.any_changed == 'true'
         run: |
             git config --local user.name actions-user
             git config --local user.email "actions@github.com" 
-            git fetch 
-            git merge 
-            git add .
-            git commit -m "Auto updating files"
+            git add ${{ env.DEST_DIR }}
+            git commit -m "Copy test results to ${{ env.DEST_DIR }}"
             git push -f
 
       - name: file checks
