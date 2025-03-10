@@ -1,0 +1,31 @@
+name: Buddy
+
+run-name: buddy_runnin
+
+on:
+  push:
+    branches:
+      - '**feature**'
+    paths:
+      - sparse-test/*.html
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    name: Run
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: true
+          sparse-checkout: |
+            sparse-test/*.html
+
+      - shell: pwsh
+        run: |
+          Get-ChildItem -path .\sparse-test -recurse
+
+          write-output " `n--------------------------`n "
