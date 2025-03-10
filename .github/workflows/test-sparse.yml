@@ -28,33 +28,42 @@ jobs:
           lfs: true
           sparse-checkout: |
             source/sparse-test
-
+            
       - name: copy files
-        shell: pwsh
-        run: |
-          $htmlFiles    = Get-ChildItem -path ${{ env.SOURCE_DIR }} -recurse -filter *.html
-          $HTMLfILES
+        uses: canastro/copy-file-action@master
+        with:
+          source: ${{ env.SOURCE_DIR }}
+          target: ${{ env.DEST_DIR }}
 
-          # Create destination dir if not exist
-          if( -not (test-path ${{ env.DEST_DIR }}) ) {
-            New-Item -Path ${{ env.DEST_DIR }} -ItemType Directory -Force
-          }
+      # - name: copy files
+      #   shell: pwsh
+      #   run: |
+      #     $htmlFiles    = Get-ChildItem -path ${{ env.SOURCE_DIR }} -recurse -filter *.html
+      #     $HTMLfILES
 
-          $htmlFiles | copy-item -destination ${{ env.DEST_DIR }} -force
+      #     # Create destination dir if not exist
+      #     if( -not (test-path ${{ env.DEST_DIR }}) ) {
+      #       New-Item -Path ${{ env.DEST_DIR }} -ItemType Directory -Force
+      #     }
 
-          # $templateFile = Get-Content -path .\swa\template_index.html -Raw
+      #     $htmlFiles | copy-item -destination ${{ env.DEST_DIR }} -force
 
-          # build list
-          # foreach ( $file in $htmlFiles ) {
-          #   $line = "  <li><a href=`"$($file.FullName)`">$($file.Name)</a></li>"
-          # }
+      #     # $templateFile = Get-Content -path .\swa\template_index.html -Raw
+
+      #     # build list
+      #     # foreach ( $file in $htmlFiles ) {
+      #     #   $line = "  <li><a href=`"$($file.FullName)`">$($file.Name)</a></li>"
+      #     # }
 
       - name: Push added files
         #if: steps.changed-maester-tests-reports.outputs.any_changed == 'true'
         run: |
             git config --local user.name actions-user
             git config --local user.email "actions@github.com" 
-            git commit -m "Add changes" -a
+            git fetch 
+            git merge 
+            git add .
+            git commit -m "Auto updating files"
             git push -f
 
       - name: file checks
