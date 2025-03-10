@@ -12,13 +12,15 @@ env:
   SOURCE_DIR: source/sparse-test
   DEST_DIR: other
 
+permissions:
+  id-token: write
+  contents: write
+  checks: write
+
 jobs:
   job1:
     runs-on: ubuntu-latest
     name: Run
-    permissions:
-      id-token: write
-      contents: write
     steps:
       - uses: actions/checkout@v3
         with:
