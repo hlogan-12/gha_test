@@ -1,6 +1,5 @@
-name: Buddy
+name: test-sparse
 
-run-name: buddy_runnin
 
 on:
   push:
