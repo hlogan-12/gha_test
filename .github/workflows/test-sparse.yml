@@ -2,6 +2,8 @@ name: test-sparse
 
 
 on:
+  workflow_dispatch:
+
   push:
     branches:
       - main
