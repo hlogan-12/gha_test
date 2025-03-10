@@ -34,6 +34,12 @@ jobs:
         run: |
           $htmlFiles    = Get-ChildItem -path ${{ env.SOURCE_DIR }} -recurse -filter *.html
           $HTMLfILES
+
+          # Create destination dir if not exist
+          if( ! (test-path ${{ env.DEST_DIR }} ) {
+            new-item -path ${{ env.DEST_DIR }} -itemtype directory -force
+          }
+
           $htmlFiles | copy-item -destination ${{ env.DEST_DIR }} -force
 
           # $templateFile = Get-Content -path .\swa\template_index.html -Raw
