@@ -54,10 +54,7 @@ jobs:
         run: |
             git config --local user.name actions-user
             git config --local user.email "actions@github.com" 
-            git fetch
-            git merge 
-            git add .
-            git commit -m "Auto updating files"
+            git commit -m "Add changes" -a
             git push -f
 
       - name: file checks
